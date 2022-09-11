@@ -7,25 +7,66 @@ class UserRepository implements IUserRepository {
 
     private repository!: PrismaClient
 
-    constructor () {
+    constructor() {
         this.repository = new PrismaClient()
     }
 
-    async create(data: ICreateUserDTO): Promise<void> {
-        const newUSer = await this.repository.user.create({
-                data: {
-                    email: "lucas@email.com",
-                    password: "1234",
-                    name: "Lucas"
-                }
-        }).then(async (_) => await this.repository.$disconnect())   
+    async create({ name, email, password, avatar }: ICreateUserDTO): Promise<User> {
+        const user = new User({ name, email, password, avatar })
+        const newUser = await this.repository.user.create({
+            data: {
+                email: user.email,
+                password: user.password,
+                name: user.name,
+                avatar: user.avatar ?? null
+            }
+        }).then(async (user) => {
+            await this.repository.$disconnect()
+            return user
+        })
+
+        return newUser
+
     }
 
-    async findByEmail(email: string): Promise<User> {
-        throw new Error("Method not implemented.");
+    async findByEmail(email: string): Promise<User | null> {
+        const user = await this.repository.user.findUnique({
+            where: { email }
+        }).then(async (user) => {
+            await this.repository.$disconnect()
+            return user
+        })
+
+        return user
     }
-    async findById(id: string): Promise<User> {
-        throw new Error("Method not implemented.");
+
+    async findById(id: number): Promise<User | null> {
+        const user = await this.repository.user.findUnique({
+            where: { id }
+        }).then(async (user) => {
+            await this.repository.$disconnect()
+            return user
+        })
+
+        return user
     }
-    
+
+    async update(id: number, name: string): Promise<User | null> {
+        const user = await this.repository.user.update({
+            where: {
+                id
+            },
+            data: {
+                name
+            }
+        }).then(async (user) => {
+            await this.repository.$disconnect()
+            return user
+        })
+
+        return user
+    }
+
 }
+
+export { UserRepository }

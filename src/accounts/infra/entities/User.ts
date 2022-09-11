@@ -1,15 +1,17 @@
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 
-
 class User {
-    id?: string;
+    id?: number;
     name!: string;
     email!: string;
     password!: string;
-    avatar?: string
+    avatar!: string | null;
 
     constructor({ email, name, avatar, password }: ICreateUserDTO) {
-        Object.assign(this, email, name, avatar ?? null, password)
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.avatar = avatar ?? null
     }
 }
 
