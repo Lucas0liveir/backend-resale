@@ -1,8 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import bcrypt from "bcrypt"
-import { sign } from "jsonwebtoken"
+import bcrypt from "bcrypt";
+import { sign } from "jsonwebtoken";
 import { AppError } from "../../../shared/error";
 import { IUserRepository } from "../../repositories/IUserRepository";
+import { IRefreshTokenRepository } from "../../repositories/IRefreshTokenRepository";
 
 interface IRequest {
     email: string;
@@ -17,6 +18,7 @@ interface IResponse {
         avatar: string | null;
     }
     token: string;
+    refreshToken: string;
 }
 
 @injectable()
@@ -24,25 +26,42 @@ class AuthenticateUserUseCase {
 
     constructor(
         @inject("UserRepository")
-        private userRepository: IUserRepository
+        private userRepository: IUserRepository,
+        @inject("RefreshTokenRepository")
+        private refreshTokenRepository: IRefreshTokenRepository
     ) { }
 
     async execute({ email, password }: IRequest): Promise<IResponse> {
         const user = await this.userRepository.findByEmail(email)
 
+
         if (!user) {
-            throw new AppError("Email ou senha incorretos")
+            throw new AppError("E-mail ou senha incorretos")
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password)
 
         if (!passwordMatch) {
-            throw new AppError("Email ou senha incorretos")
+            throw new AppError("E-mail ou senha incorretos")
         }
 
-        const token = sign({ id: user.id }, process.env.JWT_SECRET!, {
+        const userRefreshToken = await this.refreshTokenRepository.findByUserId(user.id!)
+
+        if (userRefreshToken) {
+            await this.refreshTokenRepository.delete(user.id!)
+        }
+
+        const token = sign({ email: user.email }, process.env.JWT_SECRET!, {
+            subject: String(user.id),
             expiresIn: '1h'
         })
+
+        const refreshToken = sign({ email: user.email }, process.env.JWT_SECRET_REFRESH_TOKEN!, {
+            subject: String(user.id),
+            expiresIn: '7 days'
+        })
+
+        await this.refreshTokenRepository.create(user.id!, refreshToken)
 
         const userAuthenticated: IResponse = {
             user: {
@@ -51,7 +70,8 @@ class AuthenticateUserUseCase {
                 avatar: user.avatar,
                 id: user.id
             },
-            token
+            token,
+            refreshToken
         }
 
         return userAuthenticated;

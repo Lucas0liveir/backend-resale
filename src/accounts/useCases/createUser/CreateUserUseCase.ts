@@ -5,6 +5,13 @@ import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { User } from "../../infra/entities/User";
 import { IUserRepository } from "../../repositories/IUserRepository";
 
+interface IUserResponse {
+    id: number;
+    name: string;
+    email: string;
+    avatar: string;
+}
+
 @injectable()
 class CreateUserCase {
 
@@ -18,7 +25,7 @@ class CreateUserCase {
         email,
         password,
         avatar
-    }: ICreateUserDTO): Promise<User> {
+    }: ICreateUserDTO): Promise<IUserResponse> {
         const userAlreadyExists = await this.userRepository.findByEmail(email)
 
         if (userAlreadyExists) {
@@ -34,7 +41,12 @@ class CreateUserCase {
             avatar
         });
 
-        return newUser
+        return {
+            id: newUser.id!,
+            name: newUser.name,
+            email: newUser.email,
+            avatar: newUser.avatar!
+        }
     }
 }
 
