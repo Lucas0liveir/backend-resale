@@ -11,8 +11,8 @@ class RefreshTokenUserUseCase {
         private refreshTokenRepository: IRefreshTokenRepository
     ) { }
 
-    async execute(token: string): Promise<string> {
-        
+    async execute(token: string): Promise<{refreshToken: string, token: string}> {
+
         const decode = verify(token, process.env.JWT_SECRET_REFRESH_TOKEN!)
 
         const { sub: userId } = decode
@@ -39,7 +39,10 @@ class RefreshTokenUserUseCase {
 
         await this.refreshTokenRepository.create(user_id, refreshToken)
 
-        return newToken;
+        return {
+            refreshToken,
+            token: newToken
+        };
 
     }
 }

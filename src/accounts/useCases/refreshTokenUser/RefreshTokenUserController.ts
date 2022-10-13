@@ -6,7 +6,7 @@ import { RefreshTokenUserUseCase } from "./RefreshTokenUserUseCase";
 
 class RefreshTokenUserController {
 
-    async handle(request: Request, response: Response): Promise<Response<{ token: string }>> {
+    async handle(request: Request, response: Response): Promise<Response<{refreshToken: string, token: string }>> {
         const { refreshToken } = request.body
 
         if (!refreshToken || typeof refreshToken !== "string")
@@ -14,9 +14,9 @@ class RefreshTokenUserController {
 
         const refreshTokenUserUseCase = container.resolve(RefreshTokenUserUseCase)
 
-        const token = await refreshTokenUserUseCase.execute(refreshToken)
+        const tokens = await refreshTokenUserUseCase.execute(refreshToken)
 
-        return response.status(201).json({ token })
+        return response.status(201).json(tokens)
     }
 }
 

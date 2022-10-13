@@ -18,17 +18,75 @@ model User {
   password        String
   avatar          String?
   refresh_token   RefreshToken?
+  resale          Resale[]
+  product         Product[]
+  client          Client?
   role            Role            @default(USER)
   @@map("users")
 }
 
 model RefreshToken {
-  id        String    @id @default(uuid())
-  token     String    @default(uuid())
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int       @unique
+  id        String            @id @default(uuid())
+  token     String            @default(uuid())
+  user      User              @relation(fields: [userId], references: [id])
+  userId    Int               @unique
 
   @@map("refresh_token")
+}
+
+model Client {
+  id        String            @id @default(uuid())
+  nome      String
+  telefone  String
+  user      User              @relation(fields: [userId], references: [id])
+  userId    Int               @unique
+
+  @@map("client")
+}
+
+model Category {
+  id        String            @id @default(uuid())
+  nome      String
+  product   Product?
+
+  @@map("category")
+}
+
+model Product {
+  id             String       @id @default(uuid())
+  nome           String
+  descricao      String
+  price          Decimal
+  maxEstoque     Int
+  minEstoque     Int
+  userId         Int            @unique
+  user           User           @relation(fields: [userId], references: [id])
+  category_id    String         @unique
+  category       Category       @relation(fields: [category_id], references: [id])
+  resaleItens    ResaleItens[]
+ 
+  @@map("product")
+}
+
+model ResaleItens {
+  product_id             String   @unique
+  product                Product  @relation(fields: [product_id], references: [id])
+  resale_id              String   @unique
+  resale                 Resale   @relation(fields: [resale_id], references: [id])
+  quantity               Int    
+  totalValue             Decimal
+
+  @@map("resale_itens")
+}
+
+model Resale {
+  id             String         @id @default(uuid())
+  data           DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id])
+  userId         Int            @unique
+  resaleItens    ResaleItens[]
+
+  @@map("resale")
 }
 
 enum Role {
