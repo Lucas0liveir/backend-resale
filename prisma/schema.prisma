@@ -20,7 +20,7 @@ model User {
   refresh_token   RefreshToken?
   resale          Resale[]
   product         Product[]
-  client          Client?
+  client          Client[]
   role            Role            @default(USER)
   @@map("users")
 }

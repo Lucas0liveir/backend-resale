@@ -2,6 +2,7 @@ import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { PrismaClient } from '@prisma/client'
 import { User } from "../entities/User";
+import { AppError } from "../../../shared/error";
 
 class UserRepository implements IUserRepository {
 
@@ -24,6 +25,9 @@ class UserRepository implements IUserRepository {
             await this.repository.$disconnect()
             return user
         })
+        .catch(_ => {
+            throw new AppError("Ocorreu um erro ao criar seu usuário, favor tentar novamente")
+        })
 
         return newUser
 
@@ -36,6 +40,9 @@ class UserRepository implements IUserRepository {
             await this.repository.$disconnect()
             return user
         })
+        .catch(_ => {
+            throw new AppError("Ocorreu um erro ao buscar usuário, favor tentar novamente")
+        })
 
         return user
     }
@@ -46,6 +53,9 @@ class UserRepository implements IUserRepository {
         }).then(async (user) => {
             await this.repository.$disconnect()
             return user
+        })
+        .catch(_ => {
+            throw new AppError("Ocorreu um erro ao criar usuário, favor tentar novamente")
         })
 
         return user
@@ -62,6 +72,9 @@ class UserRepository implements IUserRepository {
         }).then(async (user) => {
             await this.repository.$disconnect()
             return user
+        })
+        .catch(_ => {
+            throw new AppError("Ocorreu um erro ao atualizar seu usuário, favor tentar novamente")
         })
 
         return user

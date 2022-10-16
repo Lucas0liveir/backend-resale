@@ -16,6 +16,7 @@ interface IResponse {
         name: string;
         email: string;
         avatar: string | null;
+        role: "USER" | "ADMIN" | undefined
     }
     token: string;
     refreshToken: string;
@@ -68,7 +69,8 @@ class AuthenticateUserUseCase {
                 name: user.name,
                 email: user.email,
                 avatar: user.avatar,
-                id: user.id
+                id: user.id,
+                role: user.role
             },
             token,
             refreshToken

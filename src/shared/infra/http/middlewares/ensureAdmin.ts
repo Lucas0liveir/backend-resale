@@ -21,10 +21,10 @@ export default async (request: Request, response: Response, next: NextFunction) 
 
         const user = await findUserUseCase.execute(Number(userId))
 
-        if (!user) throw new AppError("usuário não existe", 401)
+        if (user?.role !== "ADMIN") throw new AppError("Não autorizado", 401)
 
         request.user = {
-            id: user.id!
+            id: Number(user.id!)
         }
 
         next()
@@ -32,8 +32,5 @@ export default async (request: Request, response: Response, next: NextFunction) 
         if (e instanceof AppError) return response.json(e)
         throw new AppError("Token inválido", 401)
     }
-
-
-
 
 }

@@ -6,10 +6,10 @@ import { RefreshTokenUserController } from "../../../../accounts/useCases/refres
 const authenticateUserController = new AuthenticateUserController()
 const createUserController = new CreateUserController()
 const refreshTokenUserController = new RefreshTokenUserController()
-const router = Router()
+const accounts = Router()
 
-router.post('/user', createUserController.handle)
-router.post('/sessions', authenticateUserController.handle)
-router.post('/refreshToken', refreshTokenUserController.handle)
+accounts.post('/user', createUserController.handle)
+accounts.post('/sessions', authenticateUserController.handle)
+accounts.post('/refreshToken', refreshTokenUserController.handle)
 
-export { router }
+export { accounts }
