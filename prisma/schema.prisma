@@ -47,7 +47,7 @@ model Client {
 model Category {
   id        String            @id @default(uuid())
   nome      String
-  product   Product?
+  product   Product[]
 
   @@map("category")
 }
@@ -59,9 +59,9 @@ model Product {
   price          Decimal
   maxEstoque     Int
   minEstoque     Int
-  userId         Int            @unique
   user           User           @relation(fields: [userId], references: [id])
-  category_id    String         @unique
+  userId         Int
+  category_id    String        
   category       Category       @relation(fields: [category_id], references: [id])
   resaleItens    ResaleItens[]
  

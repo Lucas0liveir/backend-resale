@@ -21,6 +21,7 @@ class ProductRepository implements IProductRepository {
             this.repository.$disconnect()
             return product
         }).catch(_ => {
+            this.repository.$disconnect()
             throw new AppError("Ocorreu um erro ao cadastrar seu produto, favor tentar novamente")
         })
 
@@ -39,6 +40,7 @@ class ProductRepository implements IProductRepository {
             })
             .then(product => { return product })
             .catch(_ => {
+                this.repository.$disconnect()
                 throw new AppError("Ocorreu um erro ao buscar seu produto, favor tentar novamente")
             })
 
@@ -57,14 +59,37 @@ class ProductRepository implements IProductRepository {
             })
             .then(product => { return product })
             .catch(_ => {
+                this.repository.$disconnect()
                 throw new AppError("Ocorreu um erro ao buscar seus produtos, favor tentar novamente")
             })
 
         return product
     }
 
-    update(id: string): Promise<Product | null> {
-        throw new Error("Method not implemented.");
+    async update({ id, nome, descricao, maxEstoque, minEstoque, price, category_id }: ICreateProductDTO): Promise<Product | null> {
+        
+        const updatedProduct = this.repository.product.update({
+            where: {
+               id
+            },
+            data: {
+                nome,
+                descricao,
+                category_id,
+                maxEstoque,
+                minEstoque,
+                price
+            }
+        })
+            .then(res => {
+                this.repository.$disconnect()
+                return res
+            })
+            .catch(_ => {
+                throw new AppError("Ocorreu um erro ao atualizar o produto, favor tentar novamente")
+            })
+
+            return updatedProduct
     }
 
 }
