@@ -28,6 +28,25 @@ class ProductRepository implements IProductRepository {
         return newProduct
     }
 
+    async findByIds(id: string[]): Promise<Product[] | []> {
+        const product = this.repository.product.findMany({
+            where: {
+                id: { in: [...id] }
+            }
+        })
+            .then(product => {
+                this.repository.$disconnect()
+                return product
+            })
+            .then(product => { return product })
+            .catch(_ => {
+                this.repository.$disconnect()
+                throw new AppError("Ocorreu um erro ao buscar seu produto, favor tentar novamente")
+            })
+
+        return product
+    }
+
     async findById(id: string): Promise<Product | null> {
         const product = this.repository.product.findUnique({
             where: {
@@ -67,10 +86,10 @@ class ProductRepository implements IProductRepository {
     }
 
     async update({ id, nome, descricao, maxEstoque, minEstoque, price, category_id }: ICreateProductDTO): Promise<Product | null> {
-        
+
         const updatedProduct = this.repository.product.update({
             where: {
-               id
+                id
             },
             data: {
                 nome,
@@ -89,7 +108,7 @@ class ProductRepository implements IProductRepository {
                 throw new AppError("Ocorreu um erro ao atualizar o produto, favor tentar novamente")
             })
 
-            return updatedProduct
+        return updatedProduct
     }
 
 }

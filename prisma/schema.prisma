@@ -40,7 +40,7 @@ model Client {
   telefone  String
   resale    Resale[]
   user      User              @relation(fields: [userId], references: [id])
-  userId    Int               @unique
+  userId    Int
 
   @@map("client")
 }
@@ -71,9 +71,9 @@ model Product {
 
 model Installments {
   id                    String       @id @default(uuid())
-  resale_itens          Resale  @relation(fields: [resale_itens_id], references: [id])
+  resale_itens          Resale       @relation(fields: [resale_itens_id], references: [id])
   resale_itens_id       String
-  payment_date          DateTime
+  payment_date          String
   payment_value         Decimal
 }
 
@@ -94,7 +94,7 @@ model Resale {
   cliente        Client         @relation(fields: [client_id], references: [id])
   client_id      String
   user           User           @relation(fields: [userId], references: [id])
-  userId         Int            @unique
+  userId         Int
   installments   Installments[] 
   totalValue     Decimal
   products       ResaleItens[]

@@ -7,7 +7,7 @@ class Resale {
     data?: Date;
     client_id: string;
     userId: number;
-    totalValue: Decimal;
+    totalValue?: Decimal;
 
     constructor({ client_id, userId, totalValue }: ICreateResaleDTO) {
         this.client_id = client_id

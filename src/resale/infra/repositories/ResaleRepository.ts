@@ -13,14 +13,29 @@ class ResaleRepository implements IResaleRepository {
         this.repository = new PrismaClient()
     }
 
-    async create(data: ICreateResaleDTO, products: { product_id: string, quantity: number }[]): Promise<Resale> {
+    async create({ products, installments, totalValue, ...rest }: ICreateResaleDTO): Promise<Resale> {
         const resale = this.repository.resale.create({
             data: {
-                ...data,
+                totalValue: totalValue!,
+                ...rest,
                 products: {
                     create: [
                         ...products
                     ]
+                },
+                installments: {
+                    create: [
+                        ...installments!
+                    ]
+                },
+            },
+            include: {
+                installments: true,
+                products: {
+                    select: {
+                        product: true,
+                        quantity: true
+                    }
                 }
             }
         })
@@ -28,7 +43,8 @@ class ResaleRepository implements IResaleRepository {
                 this.repository.$disconnect()
                 return res
             })
-            .catch(_ => {
+            .catch(e => {
+                console.log(e)
                 throw new AppError("Não foi possivel registrar a revenda, favor tentar novamente")
             })
 
@@ -46,3 +62,5 @@ class ResaleRepository implements IResaleRepository {
     }
 
 }
+
+export { ResaleRepository }
