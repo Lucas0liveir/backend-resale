@@ -12,7 +12,7 @@ class UpdateProductUseCase {
         private productRepository: IProductRepository
     ) { }
 
-    async execute({ id, userId, descricao, maxEstoque, minEstoque, category_id, nome, price }: ICreateProductDTO): Promise<Product | null> {
+    async execute({ id, userId, descricao, estoque, minEstoque, category_id, nome, price }: ICreateProductDTO): Promise<Product | null> {
         const product = await this.productRepository.findById(id!)
 
         if (product?.userId !== userId) throw new AppError("Não autorizado", 401)
@@ -22,7 +22,7 @@ class UpdateProductUseCase {
                 id,
                 userId,
                 descricao,
-                maxEstoque,
+                estoque,
                 minEstoque,
                 category_id,
                 nome,

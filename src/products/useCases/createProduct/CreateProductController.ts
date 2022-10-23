@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { Product } from "../../infra/entities/Product";
@@ -7,7 +8,7 @@ class CreateProductController {
 
     async handle(request: Request, response: Response): Promise<Response<Product | void>> {
         const { id: userId } = request.user
-        const { nome, descricao, category_id, price, maxEstoque, minEstoque } = request.body
+        const { nome, descricao, category_id, price, estoque, minEstoque } = request.body
         const createProductUseCase = container.resolve(CreateProductUseCase)
 
         const product = await createProductUseCase
@@ -17,8 +18,8 @@ class CreateProductController {
                     nome,
                     descricao,
                     category_id,
-                    price,
-                    maxEstoque,
+                    price: new Decimal(price),
+                    estoque,
                     minEstoque
                 })
 

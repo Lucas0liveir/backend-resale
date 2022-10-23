@@ -7,12 +7,15 @@ interface ICreateResaleDTO {
     userId: number;
     totalValue?: Decimal;
     products: products_to_resale[];
+    is_canceled?: boolean;
     installments?: Installments[]
 }
 
-type Installments = {
+export type Installments = {
+    id?: string;
     payment_date: string;
     payment_value: Decimal;
+    is_paid?: boolean;
 }
 
 type products_to_resale = {

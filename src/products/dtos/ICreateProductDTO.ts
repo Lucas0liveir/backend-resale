@@ -7,7 +7,7 @@ interface ICreateProductDTO {
     nome: string;
     descricao: string;
     price: Decimal;
-    maxEstoque: number;
+    estoque: number;
     minEstoque: number;
 }
 

@@ -6,7 +6,7 @@ interface IResaleRepository {
     create({ products, ...data }: ICreateResaleDTO): Promise<Resale>;
     findById(id: string): Promise<Resale | null>;
     findByUserId(userId: number): Promise<Resale[] | []>
-    update(data: ICreateResaleDTO): Promise<Resale | null>;
+    updateInstallment(installment_id: string): Promise<Resale | null>;
 }
 
 export { IResaleRepository };

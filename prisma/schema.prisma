@@ -54,11 +54,11 @@ model Category {
 }
 
 model Product {
-  id             String       @id @default(uuid())
+  id             String         @id @default(uuid())
   nome           String
   descricao      String
   price          Decimal
-  maxEstoque     Int
+  estoque        Int
   minEstoque     Int
   user           User           @relation(fields: [userId], references: [id])
   userId         Int
@@ -75,6 +75,7 @@ model Installments {
   resale_itens_id       String
   payment_date          String
   payment_value         Decimal
+  is_paid               Boolean      @default(false)
 }
 
 model ResaleItens {
@@ -95,7 +96,8 @@ model Resale {
   client_id      String
   user           User           @relation(fields: [userId], references: [id])
   userId         Int
-  installments   Installments[] 
+  installments   Installments[]
+  is_canceled    Boolean        @default(false) 
   totalValue     Decimal
   products       ResaleItens[]
 

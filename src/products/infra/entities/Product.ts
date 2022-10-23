@@ -9,16 +9,16 @@ class Product implements ICreateProductDTO {
     category_id: string;
     descricao: string;
     price: Decimal;
-    maxEstoque: number;
+    estoque: number;
     minEstoque: number;
 
-    constructor({ nome, descricao, category_id, maxEstoque, minEstoque, price, userId }: ICreateProductDTO) {
+    constructor({ nome, descricao, category_id, estoque, minEstoque, price, userId }: ICreateProductDTO) {
         this.nome = nome;
         this.descricao = descricao;
         this.userId = userId;
         this.category_id = category_id;
         this.price = price;
-        this.maxEstoque = maxEstoque;
+        this.estoque = estoque;
         this.minEstoque = minEstoque;
     }
 
