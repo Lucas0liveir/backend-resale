@@ -27,6 +27,19 @@ class CategoryRepository implements ICategoryRepository {
         return newCategory
     }
 
+    async findAll(): Promise<Category[] | null> {
+        const categories = await this.repository.category.findMany()
+            .then(res => {
+                this.repository.$disconnect()
+                return res
+            })
+            .catch(_ => {
+                throw new AppError("Não foi possível listar as categorias, favor tente novamente")
+            })
+
+        return categories
+    }
+    
     async findById(id: string): Promise<Category | null> {
         const category = await this.repository.category.findUnique({
             where: {

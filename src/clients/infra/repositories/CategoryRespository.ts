@@ -27,6 +27,23 @@ class ClientRepository implements IClientRepository {
         return newClient
     }
 
+    async findByUserId(id: number): Promise<Client[] | null> {
+        const clients = await this.repository.client.findMany({
+            where: {
+                userId: id
+            }
+        })
+            .then(res => {
+                this.repository.$disconnect()
+                return res
+            })
+            .catch(_ => {
+                throw new AppError("Não foi possível buscar os clientes, favor tente novamente")
+            })
+
+        return clients
+    }
+
     async findById(id: string): Promise<Client | null> {
         const client = await this.repository.client.findUnique({
             where: {

@@ -14,7 +14,7 @@ class ResaleRepository implements IResaleRepository {
     }
 
     async create({ products, installments, totalValue, ...rest }: ICreateResaleDTO): Promise<Resale> {
-        const installments_id = installments!.map(item => item.id) as string[]
+        const products_id = products!.map(item => item.product_id) as string[]
 
         await this.repository.resale.create({
             data: {
@@ -53,9 +53,9 @@ class ResaleRepository implements IResaleRepository {
 
         const resale = await this.repository.resale.findMany({
             where: {
-                installments: {
+                products: {
                     every: {
-                        id: { in: [...installments_id] }
+                        product_id: { in: [...products_id] }
                     }
                 }
             },
