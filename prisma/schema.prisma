@@ -57,6 +57,8 @@ model Product {
   id             String         @id @default(uuid())
   nome           String
   descricao      String
+  markup         String
+  cost_price     Decimal
   price          Decimal
   estoque        Int
   minEstoque     Int

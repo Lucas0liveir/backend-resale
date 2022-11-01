@@ -85,7 +85,7 @@ class ProductRepository implements IProductRepository {
         return product
     }
 
-    async update({ id, nome, descricao, estoque, minEstoque, price, category_id }: ICreateProductDTO): Promise<Product | null> {
+    async update({ id, nome, descricao, estoque, minEstoque, price, category_id, cost_price, markup }: ICreateProductDTO): Promise<Product | null> {
 
         const updatedProduct = this.repository.product.update({
             where: {
@@ -93,6 +93,8 @@ class ProductRepository implements IProductRepository {
             },
             data: {
                 nome,
+                cost_price,
+                markup,
                 descricao,
                 category_id,
                 estoque,

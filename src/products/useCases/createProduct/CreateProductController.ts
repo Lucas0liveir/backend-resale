@@ -8,7 +8,7 @@ class CreateProductController {
 
     async handle(request: Request, response: Response): Promise<Response<Product | void>> {
         const { id: userId } = request.user
-        const { nome, descricao, category_id, price, estoque, minEstoque } = request.body
+        const { nome, descricao, category_id, price, estoque, minEstoque, markup, cost_price } = request.body
         const createProductUseCase = container.resolve(CreateProductUseCase)
 
         const product = await createProductUseCase
@@ -18,6 +18,8 @@ class CreateProductController {
                     nome,
                     descricao,
                     category_id,
+                    markup, 
+                    cost_price: new Decimal(cost_price),
                     price: new Decimal(price),
                     estoque,
                     minEstoque
