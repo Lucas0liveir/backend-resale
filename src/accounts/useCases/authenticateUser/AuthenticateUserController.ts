@@ -15,6 +15,7 @@ interface IResponse {
 class AuthenticateUserController {
     async handle(request: Request, response: Response): Promise<Response<IResponse>> {
         const { email, password } = request.body
+        console.log("recebeu")
         const authenticateUserUseCase = container.resolve(AuthenticateUserUseCase)
 
         const userAuthenticated = await authenticateUserUseCase.execute({ email, password })

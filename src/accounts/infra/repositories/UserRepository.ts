@@ -40,7 +40,8 @@ class UserRepository implements IUserRepository {
             await this.repository.$disconnect()
             return user
         })
-        .catch(_ => {
+        .catch(e => {
+            console.log(e)
             throw new AppError("Ocorreu um erro ao buscar usuário, favor tentar novamente")
         })
 
