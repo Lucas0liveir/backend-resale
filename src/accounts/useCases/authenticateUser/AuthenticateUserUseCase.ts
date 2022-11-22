@@ -39,7 +39,7 @@ class AuthenticateUserUseCase {
             throw new AppError("E-mail ou senha incorretos")
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password)
+        const passwordMatch = await bcrypt.compare(password, user.password!)
 
         if (!passwordMatch) {
             throw new AppError("E-mail ou senha incorretos")

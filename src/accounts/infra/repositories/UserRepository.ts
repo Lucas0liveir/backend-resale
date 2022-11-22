@@ -12,12 +12,12 @@ class UserRepository implements IUserRepository {
         this.repository = new PrismaClient()
     }
 
-    async create({ name, email, password, avatar }: ICreateUserDTO): Promise<User> {
+    async create({ name, email, password = null, avatar }: ICreateUserDTO): Promise<User> {
         const user = new User({ name, email, password, avatar })
         const newUser = await this.repository.user.create({
             data: {
                 email: user.email,
-                password: user.password,
+                password: user.password!,
                 name: user.name,
                 avatar: user.avatar ?? null
             }

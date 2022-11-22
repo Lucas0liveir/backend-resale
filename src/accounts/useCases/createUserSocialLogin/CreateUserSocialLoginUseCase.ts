@@ -1,8 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import bcrypt from "bcrypt";
-import { AppError } from "../../../shared/error";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { User } from "../../infra/entities/User";
 import { IUserRepository } from "../../repositories/IUserRepository";
 
 interface IUserResponse {
@@ -13,7 +10,7 @@ interface IUserResponse {
 }
 
 @injectable()
-class CreateUserCase {
+class CreateUserSocialLoginUseCase {
 
     constructor(
         @inject("UserRepository")
@@ -23,21 +20,12 @@ class CreateUserCase {
     async execute({
         name,
         email,
-        password,
         avatar
     }: ICreateUserDTO): Promise<IUserResponse> {
-        const userAlreadyExists = await this.userRepository.findByEmail(email)
-
-        if (userAlreadyExists) {
-            throw new AppError("Endereço de email já cadastrado");
-        }
-
-        const passwordHash = await bcrypt.hash(password!, 10)
 
         const newUser = await this.userRepository.create({
             name,
             email,
-            password: passwordHash,
             avatar
         });
 
@@ -50,4 +38,4 @@ class CreateUserCase {
     }
 }
 
-export { CreateUserCase }
+export { CreateUserSocialLoginUseCase }

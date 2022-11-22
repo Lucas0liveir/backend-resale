@@ -13,6 +13,9 @@ const app = express()
 app.use(express.json())
 
 app.use(router)
+app.get("/", (req, res) => {
+    return res.json({message: "ok"})
+})
 
 app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
     if (err instanceof AppError) {
@@ -27,4 +30,4 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
     })
 })
 
-app.listen(PORT, () => console.log('Rodando na porta ' + PORT))
+app.listen(PORT, () => console.log('Rodando na porta ' + PORT ))
